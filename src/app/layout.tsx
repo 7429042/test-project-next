@@ -21,8 +21,8 @@ export default function RootLayout({
     children: ReactNode;
 }>) {
     return (
-        <html lang="en" className={`${roboto.variable} antialiased`}>
-            <body>
+        <html lang="en" className={`${roboto.variable} antialiased`} suppressHydrationWarning>
+            <body className="bg-background text-foreground container">
                 <AppProviders>
                     {children}
                 </AppProviders>
