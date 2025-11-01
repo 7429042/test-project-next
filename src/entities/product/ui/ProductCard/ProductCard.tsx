@@ -19,10 +19,10 @@ function ProductCard({product, href, actions}: ProductCardProps) {
                 <small className="text-sm text-muted-foreground">{product.price}</small>
             </CardHeader>
             <CardBody className="overflow-visible py-2">
-                <div className="w-full h-40 rounded-xl relative">
+                <div className="w-full h-40 rounded-xl">
                     <Badge
                         content={product.category}
-                        color="primary"
+                        color="danger"
                         placement="top-left"
                         variant="solid"
                         size="sm"

@@ -8,17 +8,19 @@ import {ThemeProvider} from 'next-themes';
 export function AppProviders({children}: { children: ReactNode }) {
     return (
         <Provider store={store}>
-            <HeroUIProvider>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                    themes={['light', 'dark']}
-                >
+
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+                themes={['light', 'dark']}
+            >
+                <HeroUIProvider>
                     {children}
-                </ThemeProvider>
-            </HeroUIProvider>
+                </HeroUIProvider>
+
+            </ThemeProvider>
         </Provider>
 
     );

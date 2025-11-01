@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`${roboto.variable} antialiased`} suppressHydrationWarning>
-            <body className="bg-background text-foreground container">
+            <body className="min-h-screen bg-background text-foreground container">
                 <AppProviders>
                     {children}
                 </AppProviders>
