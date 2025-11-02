@@ -1,6 +1,6 @@
 import type {Metadata} from 'next';
 import {Roboto} from 'next/font/google';
-import '@/shared/styles/globals.css';
+import './globals.css';
 import {ReactNode} from 'react';
 import {AppProviders} from '@/shared/providers/AppProviders';
 
@@ -22,9 +22,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`${roboto.variable} antialiased`} suppressHydrationWarning>
-            <body className="min-h-screen bg-background text-foreground container">
+            <body className="flex items-center justify-center min-h-screen bg-background text-foreground">
                 <AppProviders>
-                    {children}
+                    <div className="container mx-auto p-6 w-full">
+                        {children}
+                    </div>
                 </AppProviders>
             </body>
         </html>
