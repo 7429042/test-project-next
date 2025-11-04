@@ -1,6 +1,5 @@
 'use client';
 import {Button, Input, Navbar, NavbarContent, NavbarItem} from '@heroui/react';
-import Link from 'next/link';
 import {SearchIcon} from '@heroui/shared-icons';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {useCallback, useEffect, useRef, useState} from 'react';

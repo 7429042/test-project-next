@@ -4,7 +4,6 @@ import {IProduct} from '@/entities/product/model';
 import {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {Button} from '@heroui/react';
-import Link from 'next/link';
 import {useRouter} from 'next/navigation';
 
 export type ProductFormValues = {
