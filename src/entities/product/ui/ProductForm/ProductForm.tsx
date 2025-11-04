@@ -5,6 +5,7 @@ import {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {Button} from '@heroui/react';
 import Link from 'next/link';
+import {useRouter} from 'next/navigation';
 
 export type ProductFormValues = {
     title: string;
@@ -57,6 +58,8 @@ export default function ProductForm({
         mode: 'onSubmit',
         defaultValues,
     });
+
+    const router = useRouter();
 
     useEffect(() => {
         reset(defaultValues);
@@ -112,12 +115,12 @@ export default function ProductForm({
                 >
                     {isSubmitting ? 'Сохраняю…' : submitLabel}
                 </Button>
-                <Link href={'/'}>
-                    <Button variant="flat"
+
+                    <Button variant="flat" onPress={() => router.push('/')}
                             className="w-full" color="warning" size="md">
                         Отмена
                     </Button>
-                </Link>
+
             </div>
         </form>
     );

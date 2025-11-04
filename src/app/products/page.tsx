@@ -4,7 +4,7 @@ import {IProduct} from '@/entities/product/model';
 import ProductCard from '@/entities/product/ui/ProductCard/ProductCard';
 import {useSelector} from 'react-redux';
 import {selectDeletedIds, selectFavoriteIds} from '@/entities/product/model/productUiSlice';
-import {useMemo, useState} from 'react';
+import {Suspense, useMemo, useState} from 'react';
 import {Button, Pagination, Select, SelectItem, Skeleton, Switch} from '@heroui/react';
 import ProductCardSkeleton from '@/entities/product/ui/ProductCard/ProductCardSkeleton';
 import {selectAllLocal} from '@/entities/product/model/productLocalSlice';
@@ -12,7 +12,7 @@ import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 
 type Filter = 'all' | 'favorite'
 
-function Page() {
+function ProductsContent() {
     const {isLoading, data, error} = useGetProductsQuery();
     const deletedIds = useSelector(selectDeletedIds);
     const favoriteIds = useSelector(selectFavoriteIds);
@@ -20,11 +20,9 @@ function Page() {
 
     const pathName = usePathname();
     const router = useRouter();
-
     const searchParams = useSearchParams();
 
     const q = (searchParams.get('q') ?? '').trim().toLowerCase();
-
 
     const [filter, setFilter] = useState<Filter>('all');
     const [pageSize, setPageSize] = useState(8);
@@ -35,16 +33,10 @@ function Page() {
         params.set('page', String(Math.max(1, nextPage)));
         router.replace(`${pathName}?${params.toString()}`);
     };
-
     const merged: IProduct[] = useMemo(() => {
         const api = (data ?? []) as IProduct[];
         const map = new Map<string, IProduct>();
-
-        // сначала локальные — чтобы они имели приоритет в случае совпадения id
-        for (const p of localProducts) {
-            map.set(String(p.id), p);
-        }
-        // затем API — пишем только если такого ключа нет
+        for (const p of localProducts) map.set(String(p.id), p);
         for (const p of api) {
             const key = String(p.id);
             if (!map.has(key)) map.set(key, p);
@@ -53,7 +45,6 @@ function Page() {
     }, [data, localProducts]);
 
     const all = merged.filter((product) => !deletedIds[String(product.id)]);
-
     const filteredByFav = filter === 'all' ? all : all.filter((p) => Boolean(favoriteIds[String(p.id)]));
 
     const visible = useMemo(() => {
@@ -62,17 +53,12 @@ function Page() {
             const title = p.title?.toLowerCase() ?? '';
             const desc = p.description?.toLowerCase() ?? '';
             const cat = p.category?.toLowerCase() ?? '';
-            return (
-                title.includes(q) ||
-                desc.includes(q) ||
-                cat.includes(q)
-            );
+            return title.includes(q) || desc.includes(q) || cat.includes(q);
         });
     }, [filteredByFav, q]);
 
     const isFavFilter = filter === 'favorite';
     const isEmpty = visible.length === 0;
-
     const {totalPages, pageItems, safePage} = useMemo(() => {
         const totalPagesCalc = Math.max(1, Math.ceil(visible.length / pageSize));
         const safePageCalc = Math.min(pageFromUrl, totalPagesCalc);
@@ -84,7 +70,6 @@ function Page() {
             safePage: safePageCalc,
         };
     }, [visible, pageSize, pageFromUrl]);
-
     if (isLoading) {
         return (
             <div className="flex flex-col p-6">
@@ -112,14 +97,12 @@ function Page() {
     if (error) {
         return <div>Error: {String(error)}</div>;
     }
-
     return (
         <div className="flex flex-col p-6">
             {!(isFavFilter && isEmpty) && (
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-2xl font-bold">Products</h1>
                     <div className="flex items-center gap-3">
-                        {/* Размер страницы */}
                         <Select
                             aria-label="Размер страницы"
                             size="sm"
@@ -127,7 +110,7 @@ function Page() {
                             className="w-28"
                             onChange={(e) => {
                                 setPageSize(Number(e.target.value));
-                                setPageSize(1); // сброс страницы при смене размера
+                                setUrlPage(1);
                             }}
                         >
                             {[8, 12, 16, 24].map((n) => (
@@ -136,15 +119,13 @@ function Page() {
                                 </SelectItem>
                             ))}
                         </Select>
-
-                        {/* Переключатель избранного */}
                         <Switch
                             color="success"
                             size="lg"
                             isSelected={isFavFilter}
                             onValueChange={(val) => {
                                 setFilter(val ? 'favorite' : 'all');
-                                setPageSize(1); // сброс страницы при смене фильтра
+                                setUrlPage(1);
                             }}
                             aria-label="Показывать только избранное"
                         >
@@ -167,28 +148,20 @@ function Page() {
                 </div>
             ) : (
                 <div className="w-full max-w-screen-xl mx-auto">
-                    {/* FIX: одна общая сетка для обоих режимов, без дублирования */}
                     <div
                         className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
                         {pageItems.map((product: IProduct) => (
                             <div key={product.id} className="h-full">
-                                <ProductCard actions product={product} href={product.id.toString()}/>
+                                <ProductCard actions product={product} href={product.id}/>
                             </div>
                         ))}
                     </div>
                     {visible.length > 0 && (
                         <div className="flex items-center justify-between mt-6">
-                            <div className="text-sm text-default-500">
-                                Показано {pageItems.length} из {visible.length}
-                            </div>
-                            <Pagination
-                                isCompact
-                                showControls
-                                page={safePage}
-                                total={totalPages}
-                                onChange={setUrlPage}
-                                color="primary"
-                            />
+                            <div
+                                className="text-sm text-default-500">Показано {pageItems.length} из {visible.length}</div>
+                            <Pagination isCompact showControls page={safePage} total={totalPages} onChange={setUrlPage}
+                                        color="primary"/>
                         </div>
                     )}
                 </div>
@@ -197,4 +170,11 @@ function Page() {
     );
 }
 
-export default Page;
+export default function Page() {
+    // ВАЖНО: хуки навигации вызываются ТОЛЬКО внутри ProductsContent
+    return (
+        <Suspense fallback={null}>
+            <ProductsContent/>
+        </Suspense>
+    );
+}

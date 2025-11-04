@@ -76,11 +76,9 @@ function Header() {
             </NavbarContent>
             <NavbarContent as="div" className="items-center shrink-0" justify="end">
                 <NavbarItem>
-                    <Link color="foreground" href="/create-product">
-                        <Button color="primary" variant="flat">
-                            Добавить продукт
-                        </Button>
-                    </Link>
+                    <Button color="primary" variant="flat" onPress={() => router.push('/create-product')}>
+                        Добавить продукт
+                    </Button>
                 </NavbarItem>
             </NavbarContent>
         </Navbar>

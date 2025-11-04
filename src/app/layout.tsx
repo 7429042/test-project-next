@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
 import {Roboto} from 'next/font/google';
 import './globals.css';
-import {ReactNode} from 'react';
+import {ReactNode, Suspense} from 'react';
 import {AppProviders} from '@/shared/providers/AppProviders';
 import Header from '@/shared/ui/Header/Header';
 
@@ -23,8 +23,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`${roboto.variable} antialiased`} suppressHydrationWarning>
-            <body className="min-h-screen bg-background text-foreground flex flex-col">                <AppProviders>
-                    <Header/>
+            <body className="min-h-screen bg-background text-foreground flex flex-col">
+                <AppProviders>
+                    <Suspense fallback={null}>
+                        <Header/>
+                    </Suspense>
                     <main className="container mx-auto p-6 w-full flex-1">
                         {children}
                     </main>

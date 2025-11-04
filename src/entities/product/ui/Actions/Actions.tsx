@@ -3,15 +3,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import {deleteProduct, selectIsFavorite, toggleFavorite} from '@/entities/product/model/productUiSlice';
 import {FaHeart, FaRegHeart} from 'react-icons/fa';
 import {MdDelete} from 'react-icons/md';
+import {ProductId} from '@/entities/product/model/types';
 
 interface ActionsProps {
-    id: number;
+    id: ProductId;
     className?: string;
 }
 
 function Actions({id, className}: ActionsProps) {
     const dispatch = useDispatch();
-    const isFav = useSelector(selectIsFavorite(id));
+    const isFav = useSelector(selectIsFavorite(String(id)));
     return (
         <div className={className} onClick={(e) => e.stopPropagation()}>
             <ButtonGroup size="sm" variant="flat">
@@ -24,11 +25,11 @@ function Actions({id, className}: ActionsProps) {
                         variant={isFav ? 'solid' : 'flat'}
                         aria-pressed={isFav}
                         aria-label={isFav ? 'Убрать из избранного' : 'Добавить в избранное'}
-                        onPress={() => dispatch(toggleFavorite(id))}
+                        onPress={() => dispatch(toggleFavorite(String(id)))}
                     >
                             {isFav
-                                ? <FaRegHeart />
-                                : <FaHeart />
+                                ? <FaHeart />
+                                : <FaRegHeart />
                             }
                     </Button>
                 </Tooltip>
@@ -38,7 +39,7 @@ function Actions({id, className}: ActionsProps) {
                         color="danger"
                         aria-label="Удалить карточку"
                         variant="flat"
-                        onPress={() => dispatch(deleteProduct(id))}
+                        onPress={() => dispatch(deleteProduct(String(id)))}
                     >
                         <MdDelete />
                     </Button>
