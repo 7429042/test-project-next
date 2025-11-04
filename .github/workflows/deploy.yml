@@ -11,6 +11,9 @@ on:
       - 'pnpm-lock.yaml'
       - 'yarn.lock'
       - 'package-lock.json'
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
   workflow_dispatch: {}
 
 permissions:
@@ -28,6 +31,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -38,10 +43,14 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Build Next.js
+      - name: Build and Export Next.js
         env:
+          NODE_ENV: production
+          NEXT_TELEMETRY_DISABLED: 1
           NODE_OPTIONS: --max-old-space-size=2048
-        run: npm run build
+        run: |
+          npm run build
+          npx next export -o out
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
