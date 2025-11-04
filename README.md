@@ -29,8 +29,26 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deploy to GitHub Pages (минимальные затраты)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Репозиторий уже настроен для деплоя на GitHub Pages через GitHub Actions с минимальными затратами.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Что уже сделано в проекте:
+- next.config.ts настроен на статический экспорт (`output: 'export'`) и корректные пути для Pages (`basePath` и `assetPrefix` для репозитория `test-project-next`).
+- Готов workflow `.github/workflows/deploy.yml`, который собирает проект, делает `next export` и публикует содержимое `./out` на GitHub Pages.
+- Добавлены npm‑скрипты для удобства локальной сборки: `export`, `build:static`, `deploy`.
+
+Как запустить деплой:
+1. Включите GitHub Pages: Settings → Pages → Build and deployment → Source: GitHub Actions.
+2. Запушьте изменения в ветку `main` (workflow триггерится на push в `main`).
+3. Дождитесь завершения workflow Deploy to GitHub Pages (Actions → последний запуск). Сайт будет доступен по адресу:
+   `https://<ваш_логин>.github.io/test-project-next/`
+
+Полезные команды локально:
+- `npm run build:static` — сборка + статический экспорт в папку `out/`.
+- `npm run export` — только экспорт из уже собранной версии.
+
+Частые вопросы:
+- Пустые/битые картинки на Pages: в проде сайт работает по пути `/test-project-next`. Это учтено в `next.config.ts` через `basePath/assetPrefix`. Не меняйте имя репозитория без обновления этих значений.
+- SPA роутинг/404: `next export` создаёт `404.html`, GitHub Pages корректно отдаёт его как fallback.
+- Кеш/память сборки: в workflow уже добавлен `NODE_OPTIONS=--max-old-space-size=2048`, чего достаточно для маленьких проектов.
