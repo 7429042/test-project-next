@@ -11,9 +11,6 @@ on:
       - 'pnpm-lock.yaml'
       - 'yarn.lock'
       - 'package-lock.json'
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
   workflow_dispatch: {}
 
 permissions:
