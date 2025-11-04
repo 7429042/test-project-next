@@ -69,7 +69,7 @@ export default function ProductPageClient({id}: { id: string }) {
                         <Image alt="Card background" className="object-cover rounded-xl pb-4" src={product.image}
                                width={320}/>
                         <ButtonGroup variant="shadow">
-                            <Button as={Link} href="/products" variant="flat" color="primary" size="md">
+                            <Button as={Link} href="/products/" variant="flat" color="primary" size="md">
                                 На главную
                             </Button>
                             <Button variant="flat" color="warning" size="md" onPress={() => setEditMode(true)}>
