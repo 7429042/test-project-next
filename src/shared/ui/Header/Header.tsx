@@ -3,7 +3,7 @@ import {Button, Input, Navbar, NavbarContent, NavbarItem} from '@heroui/react';
 import Link from 'next/link';
 import {SearchIcon} from '@heroui/shared-icons';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 function Header() {
     const searchParams = useSearchParams();
@@ -29,13 +29,22 @@ function Header() {
         [router, pathName, searchParams]
     );
 
-    const debouncedUpdate = useMemo(() => {
-        let t: ReturnType<typeof setTimeout> | null = null;
-        return (next: string) => {
-            if (t) clearTimeout(t);
-            t = setTimeout(() => setQueryParam('q', next.trim() === '' ? null : next), 300);
-        };
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const debouncedUpdate = useCallback((next: string) => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
+            const trimmed = next.trim();
+            setQueryParam('q', trimmed === '' ? null : trimmed);
+        }, 300);
     }, [setQueryParam]);
+
+    // Очищаем таймер при размонтировании/смене зависимостей
+    useEffect(() => {
+        return () => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+        };
+    }, []);
 
     return (
         <Navbar isBordered className="bg-background">
