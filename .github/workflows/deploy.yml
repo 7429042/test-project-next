@@ -38,12 +38,10 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Build Next.js (static export)
+      - name: Build Next.js
         env:
           NODE_OPTIONS: --max-old-space-size=2048
-        run: |
-          npm run build
-          npx next export
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

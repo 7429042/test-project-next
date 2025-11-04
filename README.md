@@ -35,8 +35,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 Что уже сделано в проекте:
 - next.config.ts настроен на статический экспорт (`output: 'export'`) и корректные пути для Pages (`basePath` и `assetPrefix` для репозитория `test-project-next`).
-- Готов workflow `.github/workflows/deploy.yml`, который собирает проект, делает `next export` и публикует содержимое `./out` на GitHub Pages.
-- Добавлены npm‑скрипты для удобства локальной сборки: `export`, `build:static`, `deploy`.
+- Готов workflow `.github/workflows/deploy.yml`, который собирает проект (`next build`) и публикует содержимое `./out` на GitHub Pages.
+- Добавлены npm‑скрипты для удобства локальной сборки: `build:static`, `deploy`.
 
 Как запустить деплой:
 1. Включите GitHub Pages: Settings → Pages → Build and deployment → Source: GitHub Actions.
@@ -45,8 +45,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
    `https://<ваш_логин>.github.io/test-project-next/`
 
 Полезные команды локально:
-- `npm run build:static` — сборка + статический экспорт в папку `out/`.
-- `npm run export` — только экспорт из уже собранной версии.
+- `npm run build:static` — сборка + статический экспорт в папку `out/` (c Next 16 и `output: 'export'` результат ложится в `out/`).
 
 Частые вопросы:
 - Пустые/битые картинки на Pages: в проде сайт работает по пути `/test-project-next`. Это учтено в `next.config.ts` через `basePath/assetPrefix`. Не меняйте имя репозитория без обновления этих значений.

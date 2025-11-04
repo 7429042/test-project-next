@@ -8,8 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "export": "next export",
-    "build:static": "next build && next export",
+    "build:static": "next build",
     "deploy": "npm run build:static"
   },
   "dependencies": {
