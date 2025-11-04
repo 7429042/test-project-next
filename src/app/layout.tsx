@@ -3,6 +3,7 @@ import {Roboto} from 'next/font/google';
 import './globals.css';
 import {ReactNode} from 'react';
 import {AppProviders} from '@/shared/providers/AppProviders';
+import Header from '@/shared/ui/Header/Header';
 
 const roboto = Roboto({
     variable: '--font-roboto',
@@ -22,11 +23,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`${roboto.variable} antialiased`} suppressHydrationWarning>
-            <body className="flex items-center justify-center min-h-screen bg-background text-foreground">
-                <AppProviders>
-                    <div className="container mx-auto p-6 w-full">
+            <body className="min-h-screen bg-background text-foreground flex flex-col">                <AppProviders>
+                    <Header/>
+                    <main className="container mx-auto p-6 w-full flex-1">
                         {children}
-                    </div>
+                    </main>
                 </AppProviders>
             </body>
         </html>

@@ -15,8 +15,11 @@ function ProductCard({product, href, actions}: ProductCardProps) {
     return (
         <Card className="h-full flex flex-col py-4">
             {/* Шапка: текст слева, экшены справа. Текстовая часть кликабельна, экшены — нет */}
-            <CardHeader className="pb-0 pt-2 px-4 flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0">
+            <CardHeader className="pb-0 pt-2 px-4 flow-root">
+                <div className="float-right shrink-0 ml-3 mb-1" onClick={(e) => e.stopPropagation()}>
+                    {actions && <Actions id={product.id}/>}
+                </div>
+                <div className="min-w-0">
                     {href ? (
                         <Link href={`/products/${href}`} className="block focus:outline-none">
                             <h4 className="font-bold text-2xl line-clamp-2">{product.title}</h4>
@@ -31,9 +34,7 @@ function ProductCard({product, href, actions}: ProductCardProps) {
                         </>
                     )}
                 </div>
-                <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
-                    {actions && <Actions id={product.id}/>}
-                </div>
+
             </CardHeader>
             <CardBody className="overflow-visible py-2 mt-auto">
                 {href ? (

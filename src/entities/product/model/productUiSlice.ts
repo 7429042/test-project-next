@@ -1,7 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '@/processes/app/store';
+import {ProductId} from '@/entities/product/model/types';
 
-export type IdMap = Record<number, true>
+export type IdMap = Record<string, true>
 
 export interface ProductUiState {
     favoriteIds: IdMap;
@@ -17,8 +18,8 @@ const productUiSlice = createSlice({
     name: 'productUi',
     initialState,
     reducers: {
-        toggleFavorite: (state, action: PayloadAction<number>) => {
-            const id = action.payload;
+        toggleFavorite: (state, action: PayloadAction<ProductId>) => {
+            const id = String(action.payload);
             if (state.favoriteIds[id]) {
                 delete state.favoriteIds[id];
             } else {
@@ -26,15 +27,15 @@ const productUiSlice = createSlice({
             }
 
         },
-        deleteProduct: (state, action: PayloadAction<number>) => {
-            const id = action.payload;
+        deleteProduct: (state, action: PayloadAction<ProductId>) => {
+            const id = String(action.payload);
             state.deletedIds[id] = true;
             if (state.favoriteIds[id]) {
                 delete state.favoriteIds[id];
             }
         },
-        restoreProduct: (state, action: PayloadAction<number>) => {
-            const id = action.payload;
+        restoreProduct: (state, action: PayloadAction<ProductId>) => {
+            const id = String(action.payload);
             if (state.deletedIds[id]) {
                 delete state.deletedIds[id];
             }
@@ -66,5 +67,5 @@ export default productUiSlice.reducer;
 
 export const selectFavoriteIds = (state: RootState) => state.productUi.favoriteIds;
 export const selectDeletedIds = (state: RootState) => state.productUi.deletedIds;
-export const selectIsFavorite = (id: number) => (state: RootState) => Boolean(state.productUi.favoriteIds[id]);
-export const selectIsDeleted = (id: number) => (state: RootState) => Boolean(state.productUi.deletedIds[id]);
+export const selectIsFavorite = (id: ProductId) => (state: RootState) => Boolean(state.productUi.favoriteIds[String(id)]);
+export const selectIsDeleted = (id: ProductId) => (state: RootState) => Boolean(state.productUi.deletedIds[String(id)]);

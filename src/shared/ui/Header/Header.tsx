@@ -1,0 +1,81 @@
+'use client';
+import {Button, Input, Navbar, NavbarContent, NavbarItem} from '@heroui/react';
+import Link from 'next/link';
+import {SearchIcon} from '@heroui/shared-icons';
+import {usePathname, useRouter, useSearchParams} from 'next/navigation';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+
+function Header() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathName = usePathname();
+
+    const qParam = searchParams.get('q') ?? '';
+    const [value, setValue] = useState(qParam);
+
+    useEffect(() => {
+        setValue(qParam);
+    }, [qParam]);
+
+    const setQueryParam = useCallback(
+        (key: string, val: string | null) => {
+            const params = new URLSearchParams(searchParams.toString());
+            if (val && val.length > 0) params.set(key, val);
+            else params.delete(key);
+            // Сбрасываем страницу на 1 при изменении поиска (если есть пагинация в URL — опционально)
+            params.delete('page');
+            router.replace(`${pathName}?${params.toString()}`);
+        },
+        [router, pathName, searchParams]
+    );
+
+    const debouncedUpdate = useMemo(() => {
+        let t: ReturnType<typeof setTimeout> | null = null;
+        return (next: string) => {
+            if (t) clearTimeout(t);
+            t = setTimeout(() => setQueryParam('q', next.trim() === '' ? null : next), 300);
+        };
+    }, [setQueryParam]);
+
+    return (
+        <Navbar isBordered className="bg-background">
+            <NavbarContent as="div" className="items-center flex-1" justify="start">
+                <Input
+                    classNames={{
+                        base: 'w-full h-10',
+                        mainWrapper: 'h-full',
+                        input: 'text-small',
+                        inputWrapper:
+                            'h-full font-normal text-default-700 bg-default-400/20 dark:bg-default-500/20',
+                    }}
+                    placeholder="Поиск..."
+                    size="lg"
+                    startContent={<SearchIcon width={18}/>}
+                    type="search"
+                    value={value}
+                    onChange={(e) => {
+                        const next = e.target.value;
+                        setValue(next);
+                        debouncedUpdate(next);
+                    }}
+                    onClear={() => {
+                        setValue('');
+                        setQueryParam('q', null);
+                    }}
+                    isClearable
+                />
+            </NavbarContent>
+            <NavbarContent as="div" className="items-center shrink-0" justify="end">
+                <NavbarItem>
+                    <Link color="foreground" href="/create-product">
+                        <Button color="primary" variant="flat">
+                            Добавить продукт
+                        </Button>
+                    </Link>
+                </NavbarItem>
+            </NavbarContent>
+        </Navbar>
+    );
+}
+
+export default Header;

@@ -1,5 +1,7 @@
+export type ProductId = string | number;
+
 export interface IProduct {
-    id: number,
+    id: ProductId,
     title: string,
     price: number,
     description: string,
