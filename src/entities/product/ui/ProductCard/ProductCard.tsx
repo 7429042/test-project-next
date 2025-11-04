@@ -21,7 +21,7 @@ function ProductCard({product, href, actions}: ProductCardProps) {
                 </div>
                 <div className="min-w-0">
                     {href ? (
-                        <Link href={`/products/${href}`} className="block focus:outline-none">
+                        <Link href={`/products/${href}/`} className="block focus:outline-none">
                             <h4 className="font-bold text-2xl line-clamp-2">{product.title}</h4>
                             <p className="text-sm line-clamp-3">{product.description}</p>
                             <small className="text-sm text-muted-foreground">{product.price} $</small>
@@ -38,7 +38,7 @@ function ProductCard({product, href, actions}: ProductCardProps) {
             </CardHeader>
             <CardBody className="overflow-visible py-2 mt-auto">
                 {href ? (
-                    <Link href={`/products/${href}`} className="block">
+                    <Link href={`/products/${href}/`} className="block">
                         <div className="w-full rounded-xl bg-content1 grid place-items-center">
                             <div className="w-full h-44 sm:h-52 md:h-60">
                                 <Image

@@ -76,7 +76,7 @@ function Header() {
             </NavbarContent>
             <NavbarContent as="div" className="items-center shrink-0" justify="end">
                 <NavbarItem>
-                    <Button color="primary" variant="flat" as={Link} href="/create-product">
+                    <Button color="primary" variant="flat" as={Link} href="/create-product/">
                         Добавить продукт
                     </Button>
                 </NavbarItem>

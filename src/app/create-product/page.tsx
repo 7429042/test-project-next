@@ -23,7 +23,7 @@ function CreateProductPage() {
     const handleCreate = (values: ProductFormValues) => {
         const product: IProduct = {id: uuidv4(), ...values};
         dispatch(upsertProduct(product));
-        router.push(`/products/${product.id}`);
+        router.push(`/products/${product.id}/`);
     };
 
     return (
