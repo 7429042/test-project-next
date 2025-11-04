@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
     basePath: isProd ? `/${repo}` : undefined,
     assetPrefix: isProd ? `/${repo}/` : undefined,
     // при желании можно включить слэш на конце урлов:
-    // trailingSlash: true,
+    trailingSlash: true,
   /* config options here */
 };
 
