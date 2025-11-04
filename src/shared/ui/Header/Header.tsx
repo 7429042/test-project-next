@@ -3,6 +3,7 @@ import {Button, Input, Navbar, NavbarContent, NavbarItem} from '@heroui/react';
 import {SearchIcon} from '@heroui/shared-icons';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {useCallback, useEffect, useRef, useState} from 'react';
+import Link from 'next/link';
 
 function Header() {
     const searchParams = useSearchParams();
@@ -75,7 +76,7 @@ function Header() {
             </NavbarContent>
             <NavbarContent as="div" className="items-center shrink-0" justify="end">
                 <NavbarItem>
-                    <Button color="primary" variant="flat" onPress={() => router.push('/create-product')}>
+                    <Button color="primary" variant="flat" as={Link} href="/create-product">
                         Добавить продукт
                     </Button>
                 </NavbarItem>

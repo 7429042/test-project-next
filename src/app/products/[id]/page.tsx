@@ -1,5 +1,5 @@
 'use client';
-import {useParams, useRouter} from 'next/navigation';
+import {useParams} from 'next/navigation';
 import {useGetProductByIdQuery} from '@/shared/api/baseApi';
 import {Button, ButtonGroup, Card, CardBody, CardHeader, Image, Skeleton, Spinner} from '@heroui/react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -8,10 +8,10 @@ import {IProduct} from '@/entities/product/model';
 import {useMemo, useState} from 'react';
 import {AppDispatch} from '@/processes/app/store';
 import ProductForm, {ProductFormValues} from '@/entities/product/ui/ProductForm/ProductForm';
+import Link from 'next/link';
 
 function Page() {
     const params = useParams<{ id: string }>();
-    const router = useRouter();
     const dispatch = useDispatch<AppDispatch>();
 
     const localProduct = useSelector(selectLocalById(params.id));
@@ -84,7 +84,7 @@ function Page() {
                             width={320}
                         />
                         <ButtonGroup variant="shadow">
-                            <Button onPress={() => router.push('/products')} variant="flat" color="primary" size="md">
+                            <Button as={Link} href="/products" variant="flat" color="primary" size="md">
                                 На главную
                             </Button>
                             <Button variant="flat" color="warning" size="md" onPress={() => setEditMode(true)}>
