@@ -1,5 +1,4 @@
 'use client';
-import {useParams} from 'next/navigation';
 import {useGetProductByIdQuery} from '@/shared/api/baseApi';
 import {Button, ButtonGroup, Card, CardBody, CardHeader, Image, Skeleton, Spinner} from '@heroui/react';
 import {useDispatch, useSelector} from 'react-redux';
