@@ -49,7 +49,7 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=2048
         run: |
           npm run build
-          npx next export --outdir out
+          npx next export
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
