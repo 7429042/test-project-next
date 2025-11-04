@@ -7,11 +7,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "deploy": "gh-pages -d out --dotfiles"
+    "lint": "eslint"
   },
   "dependencies": {
     "@heroui/react": "^2.8.5",
+    "@heroui/shared-icons": "^2.1.10",
     "@heroui/system": "^2.4.23",
     "@heroui/theme": "^2.4.23",
     "@reduxjs/toolkit": "^2.9.2",
