@@ -1,4 +1,4 @@
-import ProductPageClient from './ProductPageClient';
+import dynamic from 'next/dynamic';
 import {notFound} from 'next/navigation';
 
 // Для статического экспорта генерируем фиксированный список id (без сети)
@@ -11,6 +11,8 @@ export async function generateStaticParams() {
 interface PageProps {
     params: { id: string };
 }
+
+const ProductPageClient = dynamic(() => import('./ProductPageClient'), { ssr: false });
 
 export default async function Page({params}: PageProps) {
     // Валидируем id: fakestoreapi использует положительные целые числа

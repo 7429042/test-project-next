@@ -155,11 +155,8 @@ function ProductsContent() {
                         {pageItems.map((product: IProduct) => {
 
                             const id = product.id as unknown as number | string;
-                            const isApiNumeric = typeof id === 'number' && Number.isInteger(id) && id > 0;
-
-                            const href = isApiNumeric
-                                ? `/products/${id}/`          // предсгенерированная страница
-                                : `/product/?id=${encodeURIComponent(String(id))}`; // универсальная
+                            // Для GitHub Pages используем универсальный клиентский роут
+                            const href = `/product/?id=${encodeURIComponent(String(id))}`;
 
                             return (
                                 <div key={String(product.id)} className="h-full">
