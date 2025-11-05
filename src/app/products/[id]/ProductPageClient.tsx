@@ -13,7 +13,9 @@ export default function ProductPageClient({id, initialProduct}: { id: number; in
     const dispatch = useDispatch<AppDispatch>();
     const localProduct = useSelector(selectLocalById(id));
     const {data, isLoading, isFetching, error} = useGetProductByIdQuery(id, {
-        skip: Boolean(localProduct) || Boolean(initialProduct),
+        // Не пропускаем клиентский запрос из‑за initialProduct — на GitHub Pages билдовый фетч может не отработать
+        // Локальный кэш из редакса имеет приоритет и может пропустить сетевой запрос
+        skip: Boolean(localProduct),
     });
 
     const product: IProduct | undefined = useMemo(
