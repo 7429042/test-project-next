@@ -42,13 +42,12 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Build and Export Next.js
+      - name: Build Next.js (static export via next.config.ts)
         env:
           NODE_ENV: production
           NEXT_TELEMETRY_DISABLED: 1
           NODE_OPTIONS: --max-old-space-size=2048
         run: |
-          # Ensure both build and export are executed.
-          # If your package.json already has these chained in `build`, this is still safe.
+          # Next.js 13+ removed `next export`. Use `output: 'export'` in next.config.js/ts
+          # This makes `next build` produce the static site in `out/`.
           npx next build
-          npx next export
