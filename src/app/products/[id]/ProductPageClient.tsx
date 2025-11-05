@@ -9,38 +9,37 @@ import {AppDispatch} from '@/processes/app/store';
 import ProductForm, {ProductFormValues} from '@/entities/product/ui/ProductForm/ProductForm';
 import Link from 'next/link';
 
-export default function ProductPageClient({ id, initialProduct }: { id: number; initialProduct?: IProduct }) {
+export default function ProductPageClient({id, initialProduct}: { id: number; initialProduct?: IProduct }) {
     const dispatch = useDispatch<AppDispatch>();
     const localProduct = useSelector(selectLocalById(id));
-    const { data, isLoading, isFetching, error } = useGetProductByIdQuery(id, { skip: Boolean(localProduct) || Boolean(initialProduct) });
+    const {data, isLoading, isFetching, error} = useGetProductByIdQuery(id, {
+        skip: Boolean(localProduct) || Boolean(initialProduct),
+    });
 
     const product: IProduct | undefined = useMemo(
-        () => localProduct ?? initialProduct ?? (data as IProduct | undefined),
+        () => localProduct ?? initialProduct ?? data,
         [localProduct, initialProduct, data]
     );
     const [editMode, setEditMode] = useState(false);
-
-    if (!product && (isLoading && isFetching)) {
+    if (!product && (isLoading || isFetching)) {
         return (
             <Card className="p-4">
                 <CardHeader className="px-4 flex-col gap-2 items-center">
-                    <Skeleton className="rounded-md w-56 h-8" />
-                    <Skeleton className="rounded-md w-72 h-6" />
-                    <Skeleton className="rounded-md w-24 h-5" />
+                    <Skeleton className="rounded-md w-56 h-8"/>
+                    <Skeleton className="rounded-md w-72 h-6"/>
+                    <Skeleton className="rounded-md w-24 h-5"/>
                 </CardHeader>
                 <CardBody className="overflow-visible flex-col items-center py-2 gap-4">
-                    <Skeleton className="rounded-xl w-[320px] h-[240px]" />
+                    <Skeleton className="rounded-xl w-[320px] h-[240px]"/>
                     <div className="flex gap-2">
-                        <Skeleton className="rounded-medium h-10 w-28" />
-                        <Skeleton className="rounded-medium h-10 w-32" />
+                        <Skeleton className="rounded-medium h-10 w-28"/>
+                        <Skeleton className="rounded-medium h-10 w-32"/>
                     </div>
                 </CardBody>
-                <Spinner />
+                <Spinner/>
             </Card>
         );
     }
-
-
     if (!localProduct && error) {
         return <div>Error: {String(error)}</div>;
     }
@@ -84,12 +83,8 @@ export default function ProductPageClient({ id, initialProduct }: { id: number; 
                     </>
                 ) : (
                     <div className="w-full max-w-xl">
-                        <ProductForm
-                            defaultValues={defaults}
-                            submitLabel="Сохранить"
-                            onSubmitAction={handleUpdate}
-                            idForDisplay={product.id}
-                        />
+                        <ProductForm defaultValues={defaults} submitLabel="Сохранить" onSubmitAction={handleUpdate}
+                                     idForDisplay={product.id}/>
                     </div>
                 )}
             </CardBody>

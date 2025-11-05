@@ -15,24 +15,23 @@ const productLocalSlice = createSlice({
     initialState,
     reducers: {
         upsertProduct(state, action: PayloadAction<IProduct>) {
-            const p = action.payload
-            state.byId[String(p.id)] = p
+            const p = action.payload;
+            state.byId[String(p.id)] = p;
         },
-        removeProduct(state, action: PayloadAction<IProduct>) {
-            delete state.byId[String(action.payload)]
+        removeProduct(state, action: PayloadAction<ProductId>) {
+            delete state.byId[String(action.payload)];
         },
         resetAll() {
             return initialState;
-        }
-    }
-})
+        },
+    },
+});
 
 export const {upsertProduct, removeProduct, resetAll} = productLocalSlice.actions;
 export default productLocalSlice.reducer;
 
-export const selectLocalById = (id: ProductId) => (state: RootState) =>
+export const selectLocalById = (id: ProductId | string) => (state: RootState) =>
     state.productLocal.byId[String(id)] as IProduct | undefined;
 
-// (по желанию) селектор всех локальных продуктов с типом
 export const selectAllLocal = (state: RootState) =>
     Object.values(state.productLocal.byId) as IProduct[];

@@ -70,6 +70,7 @@ function ProductsContent() {
             safePage: safePageCalc,
         };
     }, [visible, pageSize, pageFromUrl]);
+
     if (isLoading) {
         return (
             <div className="flex flex-col p-6">
@@ -150,12 +151,21 @@ function ProductsContent() {
                 <div className="w-full max-w-screen-xl mx-auto">
                     <div
                         className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
-                        {pageItems.map((product: IProduct) => (
+                        {pageItems.map((product: IProduct) => {
 
-                            <div key={product.id} className="h-full">
-                                <ProductCard actions product={product} href={String(product.id)}/>
-                            </div>
-                        ))}
+                            const id = product.id as unknown as number | string;
+                            const isApiNumeric = typeof id === 'number' && Number.isInteger(id) && id > 0;
+
+                            const href = isApiNumeric
+                                ? `/products/${id}/`          // предсгенерированная страница
+                                : `/product/?id=${encodeURIComponent(String(id))}`; // универсальная
+
+                            return (
+                                <div key={String(product.id)} className="h-full">
+                                    <ProductCard actions product={product} href={href}/>
+                                </div>
+                            );
+                        })}
                     </div>
                     {visible.length > 0 && (
                         <div className="flex items-center justify-between mt-6">
