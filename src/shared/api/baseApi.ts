@@ -5,7 +5,7 @@ import {ProductId} from '@/entities/product/model/types';
 export const baseApi = createApi({
     reducerPath: 'baseApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: process.env.NEXT_PUBLIC_API_URL
+        baseUrl: process.env.NEXT_PUBLIC_API_URL ?? 'https://fakestoreapi.com/'
     }),
     endpoints: (builder) => ({
         getProducts: builder.query<IProduct[], void>({

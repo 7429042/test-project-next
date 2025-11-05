@@ -9,10 +9,10 @@ import {AppDispatch} from '@/processes/app/store';
 import ProductForm, {ProductFormValues} from '@/entities/product/ui/ProductForm/ProductForm';
 import Link from 'next/link';
 
-export default function ProductPageClient({ id, initialProduct }: { id: string; initialProduct?: IProduct }) {
+export default function ProductPageClient({ id, initialProduct }: { id: number; initialProduct?: IProduct }) {
     const dispatch = useDispatch<AppDispatch>();
     const localProduct = useSelector(selectLocalById(id));
-    const { data, isLoading, error } = useGetProductByIdQuery(id, { skip: Boolean(localProduct) || Boolean(initialProduct) });
+    const { data, isLoading, isFetching, error } = useGetProductByIdQuery(id, { skip: Boolean(localProduct) || Boolean(initialProduct) });
 
     const product: IProduct | undefined = useMemo(
         () => localProduct ?? initialProduct ?? (data as IProduct | undefined),
@@ -20,7 +20,7 @@ export default function ProductPageClient({ id, initialProduct }: { id: string; 
     );
     const [editMode, setEditMode] = useState(false);
 
-    if (!localProduct && !initialProduct && isLoading) {
+    if (!product && (isLoading && isFetching)) {
         return (
             <Card className="p-4">
                 <CardHeader className="px-4 flex-col gap-2 items-center">
@@ -40,25 +40,7 @@ export default function ProductPageClient({ id, initialProduct }: { id: string; 
         );
     }
 
-    if (!localProduct && isLoading) {
-        return (
-            <Card className="p-4">
-                <CardHeader className="px-4 flex-col gap-2 items-center">
-                    <Skeleton className="rounded-md w-56 h-8"/>
-                    <Skeleton className="rounded-md w-72 h-6"/>
-                    <Skeleton className="rounded-md w-24 h-5"/>
-                </CardHeader>
-                <CardBody className="overflow-visible flex-col items-center py-2 gap-4">
-                    <Skeleton className="rounded-xl w-[320px] h-[240px]"/>
-                    <div className="flex gap-2">
-                        <Skeleton className="rounded-medium h-10 w-28"/>
-                        <Skeleton className="rounded-medium h-10 w-32"/>
-                    </div>
-                </CardBody>
-                <Spinner/>
-            </Card>
-        );
-    }
+
     if (!localProduct && error) {
         return <div>Error: {String(error)}</div>;
     }

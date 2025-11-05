@@ -151,8 +151,9 @@ function ProductsContent() {
                     <div
                         className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
                         {pageItems.map((product: IProduct) => (
+
                             <div key={product.id} className="h-full">
-                                <ProductCard actions product={product} href={product.id}/>
+                                <ProductCard actions product={product} href={String(product.id)}/>
                             </div>
                         ))}
                     </div>
@@ -171,7 +172,6 @@ function ProductsContent() {
 }
 
 export default function Page() {
-    // ВАЖНО: хуки навигации вызываются ТОЛЬКО внутри ProductsContent
     return (
         <Suspense fallback={null}>
             <ProductsContent/>

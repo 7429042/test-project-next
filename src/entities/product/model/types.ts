@@ -1,4 +1,4 @@
-export type ProductId = string;
+export type ProductId = number;
 
 export interface IProduct {
     id: ProductId,
