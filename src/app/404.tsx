@@ -42,8 +42,14 @@ export default function NotFound() {
         if (typeof window === 'undefined') return;
         try {
             const target = buildRedirectUrl(window.location);
-            if (target && target !== window.location.href) {
-                window.location.replace(target);
+            const current = window.location.pathname + (window.location.search || '') + (window.location.hash || '');
+            const fullCurrent = (window.location.origin ? window.location.origin : '') + current;
+            const base = `/${REPO}/`;
+            const to = target && target !== window.location.href ? target : base;
+            if (to && to !== fullCurrent && to !== current) {
+                window.location.replace(to);
+            } else if (window.location.pathname.indexOf(base) !== 0) {
+                window.location.replace(base);
             }
         } catch {
             // ignore

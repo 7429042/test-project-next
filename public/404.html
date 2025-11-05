@@ -4,7 +4,7 @@
         <meta charset="UTF-8"/>
         <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
         <title>Перенаправление…</title>
-        <meta content="0; url=./" http-equiv="refresh"/>
+        <meta content="0; url=/test-project-next/" http-equiv="refresh"/>
         <style>
             body {
                 font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
@@ -25,7 +25,6 @@
             (function () {
                 // GitHub Pages SPA redirect helper
                 // Restores the client route for project sites like /<repo>/* when the server hits 404.
-                var isProd = true; // On Pages it's always prod
                 var repo = 'test-project-next'; // keep in sync with next.config.ts
                 var base = '/' + repo + '/';
 
@@ -43,14 +42,32 @@
                 var hash = loc.hash || '';
                 var redirectUrl = target + search + hash;
 
+                // If computed redirect equals current URL (common on Pages),
+                // fallback to the site root to guarantee loading the SPA shell.
+                var current = loc.pathname + (loc.search || '') + (loc.hash || '');
+                var fullCurrent = (loc.origin ? loc.origin : '') + current;
+                if (redirectUrl === fullCurrent || redirectUrl === current) {
+                    redirectUrl = base;
+                }
+
                 // Perform redirect replacing history entry
                 try {
                     loc.replace(redirectUrl);
                 } catch (e) {
-                    // Fallback via meta refresh
+                    // Fallback via meta refresh / clickable link
                     var a = document.getElementById('link');
                     if (a) a.href = redirectUrl;
                 }
+
+                // As an extra safety, if nothing changed in 150ms, go to base
+                setTimeout(function () {
+                    if (window.location.pathname.indexOf(base) !== 0) {
+                        try {
+                            window.location.replace(base);
+                        } catch (_) {
+                        }
+                    }
+                }, 150);
             })();
         </script>
     </head>
