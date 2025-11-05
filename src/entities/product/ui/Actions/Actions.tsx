@@ -12,7 +12,7 @@ interface ActionsProps {
 
 function Actions({id, className}: ActionsProps) {
     const dispatch = useDispatch();
-    const isFav = useSelector(selectIsFavorite(String(id)));
+    const isFav = useSelector(selectIsFavorite(id));
     return (
         <div className={className} onClick={(e) => e.stopPropagation()}>
             <ButtonGroup size="sm" variant="flat">
@@ -25,7 +25,7 @@ function Actions({id, className}: ActionsProps) {
                         variant={isFav ? 'solid' : 'flat'}
                         aria-pressed={isFav}
                         aria-label={isFav ? 'Убрать из избранного' : 'Добавить в избранное'}
-                        onPress={() => dispatch(toggleFavorite(String(id)))}
+                        onPress={() => dispatch(toggleFavorite(id))}
                     >
                             {isFav
                                 ? <FaHeart />
@@ -39,7 +39,7 @@ function Actions({id, className}: ActionsProps) {
                         color="danger"
                         aria-label="Удалить карточку"
                         variant="flat"
-                        onPress={() => dispatch(deleteProduct(String(id)))}
+                        onPress={() => dispatch(deleteProduct(id))}
                     >
                         <MdDelete />
                     </Button>
