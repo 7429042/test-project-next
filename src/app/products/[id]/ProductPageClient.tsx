@@ -9,13 +9,19 @@ import {AppDispatch} from '@/processes/app/store';
 import ProductForm, {ProductFormValues} from '@/entities/product/ui/ProductForm/ProductForm';
 import Link from 'next/link';
 
-export default function ProductPageClient({id, initialProduct}: { id: number; initialProduct?: IProduct }) {
+export default function ProductPageClient({id, initialProduct}: { id: number | string; initialProduct?: IProduct }) {
     const dispatch = useDispatch<AppDispatch>();
     const localProduct = useSelector(selectLocalById(id));
-    const {data, isLoading, isFetching, error} = useGetProductByIdQuery(id, {
+
+    // Для числовых id (fakestoreapi) можно делать сетевой запрос.
+    const numericId = typeof id === 'string' ? Number(id) : id;
+    const isNumericValid = Number.isInteger(numericId) && (numericId as number) > 0;
+
+    const {data, isLoading, isFetching, error} = useGetProductByIdQuery(numericId as number, {
         // Не пропускаем клиентский запрос из‑за initialProduct — на GitHub Pages билдовый фетч может не отработать
         // Локальный кэш из редакса имеет приоритет и может пропустить сетевой запрос
-        skip: Boolean(localProduct),
+        // Также пропускаем запрос, если id не числовой (например, UUID локально созданного товара)
+        skip: Boolean(localProduct) || !isNumericValid,
     });
 
     const product: IProduct | undefined = useMemo(
