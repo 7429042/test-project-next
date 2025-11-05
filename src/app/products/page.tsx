@@ -31,7 +31,8 @@ function ProductsContent() {
     const setUrlPage = (nextPage: number) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set('page', String(Math.max(1, nextPage)));
-        router.replace(`${pathName}?${params.toString()}`);
+        // Важно: не использовать абсолютный путь без basePath; просто меняем строку запроса
+        router.replace(`?${params.toString()}`);
     };
     const merged: IProduct[] = useMemo(() => {
         const api = (data ?? []) as IProduct[];

@@ -24,7 +24,8 @@ function Header() {
             else params.delete(key);
             // Сбрасываем страницу на 1 при изменении поиска (если есть пагинация в URL — опционально)
             params.delete('page');
-            router.replace(`${pathName}?${params.toString()}`);
+            // Меняем только query, чтобы не терять basePath на GitHub Pages
+            router.replace(`?${params.toString()}`);
         },
         [router, pathName, searchParams]
     );
