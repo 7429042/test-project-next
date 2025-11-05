@@ -4,13 +4,25 @@ import {notFound} from 'next/navigation';
 // Для статического экспорта генерируем все допустимые id заранее
 export const dynamicParams = false;
 
+
 export async function generateStaticParams() {
-    // Получаем список товаров на этапе билда
-    const res = await fetch('https://fakestoreapi.com/products');
-    if (!res.ok) return [];
-    const items = (await res.json()) as { id: number }[];
-    // Возвращаем id в виде строк, как ожидает роутер
-    return items.map((p) => ({id: String(p.id)}));
+    try {
+        const res = await fetch('https://fakestoreapi.com/products', {
+            // для build-time запроса неважно кэшировать; главное — не падать
+            // в App Router на билде fetch и так кэшируется, но try/catch всё равно нужен
+            // next: { revalidate: 0 }  // можно добавить, но не обязательно
+        });
+        if (res.ok) {
+            const items = (await res.json()) as { id: number }[];
+            if (Array.isArray(items) && items.length > 0) {
+                return items.map((p) => ({id: String(p.id)}));
+            }
+        }
+    } catch {
+        // игнорируем сетевую ошибку и падаем на дефолт ниже
+    }
+    // Фолбэк — стандартные id fakestoreapi
+    return Array.from({length: 20}, (_, i) => ({id: String(i + 1)}));
 }
 
 interface PageProps {
