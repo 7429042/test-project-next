@@ -38,8 +38,14 @@ export default async function Page({params}: PageProps) {
     }
 
     // (Опционально) Предзагрузка товара на билде для стабильного UI
-    const res = await fetch(`https://fakestoreapi.com/products/${idNum}`);
-    const initialProduct = res.ok ? await res.json() : undefined;
+    let initialProduct: any = undefined;
+    try {
+        const res = await fetch(`https://fakestoreapi.com/products/${idNum}`);
+        initialProduct = res.ok ? await res.json() : undefined;
+    } catch {
+        // На билде внешняя сеть может быть недоступна — не падаем, рендерим без initialProduct
+        initialProduct = undefined;
+    }
 
     return <ProductPageClient id={idNum} initialProduct={initialProduct}/>;
 }
