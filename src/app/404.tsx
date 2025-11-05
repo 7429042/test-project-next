@@ -58,10 +58,36 @@ export default function NotFound() {
 
     return (
         <div style={{padding: 24, textAlign: 'center'}}>
+            {/* Inline immediate redirect for GitHub Pages before hydration */}
+            <script
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{
+                    __html: `(() => {
+  try {
+    var REPO='${REPO}';
+    var base='/' + REPO + '/';
+    var loc=window.location;
+    var pathname=loc.pathname||'/';
+    if (pathname.indexOf(base)===0) { pathname = pathname.slice(base.length); }
+    else if (pathname.indexOf('/')===0) { pathname = pathname.slice(1); }
+    var normalized = pathname.endsWith('/') ? pathname : (pathname + '/');
+    var target = base + normalized + (loc.search||'') + (loc.hash||'');
+    var current = loc.pathname + (loc.search||'') + (loc.hash||'');
+    var fullCurrent = (loc.origin?loc.origin:'') + current;
+    var to = (target && target !== loc.href) ? target : base;
+    if (to && to !== fullCurrent && to !== current) {
+      loc.replace(to);
+    } else if (loc.pathname.indexOf(base) !== 0) {
+      loc.replace(base);
+    }
+    setTimeout(function(){ if (window.location.pathname.indexOf(base)!==0){ try{ loc.replace(base); }catch(_){} } }, 200);
+  } catch(_) {}
+})()`
+                }}
+            />
             <h1>Перенаправление…</h1>
             <p>
-                Если перенаправление не произошло автоматически, нажмите:
-                {' '}
+                Если перенаправление не произошло автоматически, нажмите:{' '}
                 <a href={href}>вернуться на сайт</a>
             </p>
         </div>
